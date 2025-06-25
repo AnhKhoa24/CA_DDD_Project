@@ -1,0 +1,41 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Application.Common.Interfaces.Authentication;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
+namespace Infrastructure.Authentication;
+
+public class JwtTokenGenerator : IJwtTokenGenerator
+{
+    private readonly JwtSettings _jwtOptions;
+
+    public JwtTokenGenerator(IOptions<JwtSettings> jwtOptions)
+    {
+        _jwtOptions = jwtOptions.Value;
+    }
+    public string GenerateToken(Guid userId, string firstName, string lastName)
+    {
+        var siginingCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Secret)),
+            SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.GivenName, firstName),
+            new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        };
+
+        var securityToken = new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            expires: DateTime.Now.AddMinutes(_jwtOptions.ExpiryMinutes),
+            claims: claims,
+            signingCredentials: siginingCredentials
+        );
+        return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+}
