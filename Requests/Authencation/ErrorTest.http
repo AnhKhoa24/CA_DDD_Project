@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:5162
+
+POST {{baseUrl}}/auth/error-test
+Content-Type: application/json
