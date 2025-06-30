@@ -1,0 +1,21 @@
+dotnet run --project .\Api\
+
+
+How to fix the NU1900 warning?
+    dotnet nuget locals all --clear
+    dotnet restore
+
+JSON chuẩn RFC7807 (Problem Details)
+
+Scaffold-DbContext "Server=localhost;Database=MyDb;User Id=sa;Password=yourStrong(!)Password;"
+Microsoft.EntityFrameworkCore.SqlServer 
+-ContextDir Infrastructure/Persistence/Contexts 
+-OutputDir Infrastructure/Persistence/Entities 
+-Context ChanDoanBenhContext 
+-Force
+
+****Trích lỏ mediatR version 12.
+    IMediator = ISender + IPublisher
+    Nếu một service chỉ cần gửi command/query (CQRS), inject ISender.
+    Nếu một service chỉ cần publish notification/event (event-driven), inject IPublisher.
+==> Đảm bảo chữ I trong SOLID
