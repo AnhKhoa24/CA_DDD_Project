@@ -34,7 +34,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
         };
         _userRepository.AddUser(user);
 
-        string token = _jwtTokenGenerator.GenerateToken(user.Id, request.FirstName, request.LastName);
+        string token = _jwtTokenGenerator.GenerateToken(user);
 
         return new AuthenticationResult(
             user,
