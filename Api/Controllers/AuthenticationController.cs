@@ -1,27 +1,62 @@
-
-using Application.Services.Authentication;
+using Application.Common.Errors;
+using Application.Services.Authentication.Commands.Register;
+using Application.Services.Authentication.Commmon;
 using Contractas.Authentication;
+using FluentResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
-
 namespace Api.Controller;
 
 [ApiController]
 [Route("auth")]
+// [ErrorHandingFilter]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IAuthenticationService _authenticationService;
+    private readonly ISender _sender;
 
-    public AuthenticationController(IAuthenticationService authenticationService)
+    public AuthenticationController(ISender sender)
     {
-        _authenticationService = authenticationService;
+        _sender = sender; 
     }
+
     [HttpPost("register")]
-    public IActionResult Register(RegisterRequest registerRequest)
+    public async Task<IActionResult> Register(RegisterRequest registerRequest)
     {
-        var response = _authenticationService.Register(registerRequest.FirstName, registerRequest.LastName, registerRequest.Email, registerRequest.Password);
-        ///Mapping ...................
+        var registerCommand = new RegisterCommand(
+            registerRequest.FirstName,
+            registerRequest.LastName,
+            registerRequest.Email,
+            registerRequest.Password);
 
-        return Ok(response);
+        Result<AuthenticationResult> registerResult = await _sender.Send(registerCommand);
+
+        if (registerResult.IsSuccess)
+        {
+            return Ok(MapAuthResult(registerResult.Value));
+        }
+        var firstError = registerResult.Errors[0];
+        if (firstError is DuplicateEmailError duplicateEmailError)
+        {
+            return Problem(
+                statusCode: 409,
+                title: duplicateEmailError.Message,
+                detail: duplicateEmailError.Detail);
+        }
+
+        return Problem();
     }
+    [HttpPost("error-test")]
+    public IActionResult ErrorTest() => throw new Exception("This is the error test.");
+
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult authenticationResult)
+    {
+        var resultAuthResponse = new AuthenticationResponse(
+            authenticationResult.user.FirstName,
+            authenticationResult.user.LastName,
+            authenticationResult.user.Email,
+            authenticationResult.token
+        );
+        return resultAuthResponse;
+    }
+
 }
