@@ -16,7 +16,7 @@ public class AuthenticationController : ControllerBase
 
     public AuthenticationController(ISender sender)
     {
-        _sender = sender;
+        _sender = sender; 
     }
 
     [HttpPost("register")]
@@ -32,7 +32,7 @@ public class AuthenticationController : ControllerBase
 
         if (registerResult.IsSuccess)
         {
-            return Ok(MapAuthResut(registerResult.Value));
+            return Ok(MapAuthResult(registerResult.Value));
         }
         var firstError = registerResult.Errors[0];
         if (firstError is DuplicateEmailError duplicateEmailError)
@@ -48,7 +48,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("error-test")]
     public IActionResult ErrorTest() => throw new Exception("This is the error test.");
 
-    private static AuthenticationResponse MapAuthResut(AuthenticationResult authenticationResult)
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult authenticationResult)
     {
         var resultAuthResponse = new AuthenticationResponse(
             authenticationResult.user.FirstName,
