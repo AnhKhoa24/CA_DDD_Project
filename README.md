@@ -88,5 +88,5 @@ dotnet watch run --project ./Api/
 Tại thư mục gốc:
 
 ```bash
-dotnet run --project ./Api/
+dotnet test
 ```
