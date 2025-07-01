@@ -7,10 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace Api.Controller;
 
-[ApiController]
 [Route("auth")]
-// [ErrorHandingFilter]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
     private readonly ISender _sender;
     private readonly IMapper _mapper;
@@ -29,20 +27,10 @@ public class AuthenticationController : ControllerBase
         ErrorOr<AuthenticationResult> registerResult = await _sender.Send(registerCommand);
 
 
-        return registerResult.MatchFirst(
+        return registerResult.Match(
             registerResult => Ok(_mapper.Map<AuthenticationResponse>(registerResult)),
-            firstError => Problem(statusCode: StatusCodes.Status409Conflict, title: firstError.Description)
+            errors => Problem(errors)
         );
-
-        /*==> Use with FluentResults*/
-        // if (registerResult.IsSuccess) return Ok(_mapper.Map<AuthenticationResponse>(registerResult.Value));
-        // var firstError = registerResult.Errors[0];
-        // var errorList = registerResult.Errors.Select(s => s.Message);
-        // return firstError switch
-        // {
-        //     IError error => Problem(statusCode: 409, title: error.Message, detail: JsonSerializer.Serialize(errorList)),
-        //     _ => Problem()
-        // };
     }
     [HttpPost("error-test")]
     public IActionResult ErrorTest() => throw new Exception("This is the error test.");
