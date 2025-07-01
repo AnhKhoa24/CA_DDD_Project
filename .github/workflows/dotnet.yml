@@ -22,11 +22,11 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore Mini_Ecomerce_DDD.sln
+      run: dotnet restore CA_DDD_Project/Mini_Ecomerce_DDD.sln
 
     - name: Build solution
-      run: dotnet build Mini_Ecomerce_DDD.sln --no-restore --configuration Release
+      run: dotnet build CA_DDD_Project/Mini_Ecomerce_DDD.sln --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test Mini_Ecomerce_DDD.sln --no-build --configuration Release
+      run: dotnet test CA_DDD_Project/Mini_Ecomerce_DDD.sln --no-build --configuration Release
 
