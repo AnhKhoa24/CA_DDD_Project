@@ -2,12 +2,13 @@ using Application.Common.Errors;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persistence;
 using Application.Services.Authentication.Commmon;
+using Domain.Common.Errors;
 using Domain.Entities;
-using FluentResults;
+using ErrorOr;
 using MediatR;
 
 namespace Application.Services.Authentication.Commands.Register;
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<AuthenticationResult>>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
@@ -17,12 +18,13 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
-    public async Task<Result<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask; /// để bỏ cảnh báo
+        await Task.CompletedTask;
+        
         if (_userRepository.GetUserByEmail(request.Email) is not null)
         {
-            return Result.Fail<AuthenticationResult>(new[] { new DuplicateEmailError() });
+            return Errors.User.DuplicateEmail;
         }
 
         var user = new User
@@ -34,7 +36,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Au
         };
         _userRepository.AddUser(user);
 
-        string token = _jwtTokenGenerator.GenerateToken(user.Id, request.FirstName, request.LastName);
+        string token = _jwtTokenGenerator.GenerateToken(user);
 
         return new AuthenticationResult(
             user,

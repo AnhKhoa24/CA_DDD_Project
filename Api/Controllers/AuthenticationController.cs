@@ -1,62 +1,37 @@
-using Application.Common.Errors;
 using Application.Services.Authentication.Commands.Register;
 using Application.Services.Authentication.Commmon;
 using Contractas.Authentication;
-using FluentResults;
+using ErrorOr;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace Api.Controller;
 
-[ApiController]
 [Route("auth")]
-// [ErrorHandingFilter]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
     private readonly ISender _sender;
+    private readonly IMapper _mapper;
 
-    public AuthenticationController(ISender sender)
+    public AuthenticationController(ISender sender, IMapper mapper)
     {
-        _sender = sender; 
+        _sender = sender;
+        _mapper = mapper;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest registerRequest)
     {
-        var registerCommand = new RegisterCommand(
-            registerRequest.FirstName,
-            registerRequest.LastName,
-            registerRequest.Email,
-            registerRequest.Password);
+        var registerCommand = _mapper.Map<RegisterCommand>(registerRequest);
 
-        Result<AuthenticationResult> registerResult = await _sender.Send(registerCommand);
+        ErrorOr<AuthenticationResult> registerResult = await _sender.Send(registerCommand);
 
-        if (registerResult.IsSuccess)
-        {
-            return Ok(MapAuthResult(registerResult.Value));
-        }
-        var firstError = registerResult.Errors[0];
-        if (firstError is DuplicateEmailError duplicateEmailError)
-        {
-            return Problem(
-                statusCode: 409,
-                title: duplicateEmailError.Message,
-                detail: duplicateEmailError.Detail);
-        }
-
-        return Problem();
+        return registerResult.Match(
+            registerResult => Ok(_mapper.Map<AuthenticationResponse>(registerResult)),
+            errors => Problem(errors)
+        );
     }
     [HttpPost("error-test")]
     public IActionResult ErrorTest() => throw new Exception("This is the error test.");
-
-    private static AuthenticationResponse MapAuthResult(AuthenticationResult authenticationResult)
-    {
-        var resultAuthResponse = new AuthenticationResponse(
-            authenticationResult.user.FirstName,
-            authenticationResult.user.LastName,
-            authenticationResult.user.Email,
-            authenticationResult.token
-        );
-        return resultAuthResponse;
-    }
 
 }
