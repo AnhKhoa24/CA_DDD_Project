@@ -1,5 +1,7 @@
+using Api.Common.Http;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api;
 
@@ -8,20 +10,27 @@ public class ApiController : ControllerBase
 {
     protected IActionResult Problem(List<Error> errors)
     {
+        if (errors.All(error => error.Type is ErrorType.Validation))
+        {
+            var modelStateDictionary = new ModelStateDictionary();
+
+            foreach (var error in errors)
+            {
+                modelStateDictionary.AddModelError(error.Code, error.Description);
+            }
+
+            return ValidationProblem(modelStateDictionary);
+        }
+
+        HttpContext.Items[HttpContextItemKeys.Errors] = errors;
+
         var firstError = errors[0];
         var statusCode = MapErrorTypeToStatusCode(firstError);
-        
-        var errorDescriptions = errors.Select(e => e.Description).ToList();
-
-        var detailJson = System.Text.Json.JsonSerializer.Serialize(errorDescriptions);
 
         return Problem(
             statusCode: statusCode,
-            title: firstError.Description,
-            detail: detailJson 
-        );
+            title: firstError.Description);
     }
-
 
     private int MapErrorTypeToStatusCode(Error error)
     {
