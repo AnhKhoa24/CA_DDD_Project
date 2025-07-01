@@ -10,5 +10,5 @@ public class DuplicateEmailError : IError
     public string Message => "This email already exits.";
 
     public Dictionary<string, object> Metadata => new Dictionary<string, object>();
-    public string Detail => "Hihiahaha";
+    // public string Detail => "";
 }

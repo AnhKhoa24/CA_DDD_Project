@@ -1,5 +1,5 @@
 using Application.Services.Authentication.Commmon;
-using FluentResults;
+using ErrorOr;
 using MediatR;
 
 namespace Application.Services.Authentication.Commands.Register;
@@ -10,4 +10,4 @@ public record RegisterCommand
     string LastName,
     string Email,
     string Password
-) : IRequest<Result<AuthenticationResult>>;
+) : IRequest<ErrorOr<AuthenticationResult>>;
