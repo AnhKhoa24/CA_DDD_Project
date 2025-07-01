@@ -32,6 +32,6 @@ public class AuthenticationController : ApiController
         );
     }
     [HttpPost("error-test")]
-    public IActionResult ErrorTest() => throw new Exception("This is the error test.");
+    public IActionResult ErrorTest() => throw new Exception("This is the exception test.");
 
 }
