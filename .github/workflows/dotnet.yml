@@ -11,18 +11,22 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet restore Mini_Ecomerce_DDD.sln
+
+    - name: Build solution
+      run: dotnet build Mini_Ecomerce_DDD.sln --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test Mini_Ecomerce_DDD.sln --no-build --configuration Release
+
