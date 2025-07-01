@@ -10,8 +10,18 @@ public class ApiController : ControllerBase
     {
         var firstError = errors[0];
         var statusCode = MapErrorTypeToStatusCode(firstError);
-        return Problem(statusCode: statusCode, title: firstError.Description); // base.=> my trick
+        
+        var errorDescriptions = errors.Select(e => e.Description).ToList();
+
+        var detailJson = System.Text.Json.JsonSerializer.Serialize(errorDescriptions);
+
+        return Problem(
+            statusCode: statusCode,
+            title: firstError.Description,
+            detail: detailJson 
+        );
     }
+
 
     private int MapErrorTypeToStatusCode(Error error)
     {
