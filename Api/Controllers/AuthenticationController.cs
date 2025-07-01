@@ -26,7 +26,6 @@ public class AuthenticationController : ApiController
 
         ErrorOr<AuthenticationResult> registerResult = await _sender.Send(registerCommand);
 
-
         return registerResult.Match(
             registerResult => Ok(_mapper.Map<AuthenticationResponse>(registerResult)),
             errors => Problem(errors)
