@@ -1,4 +1,3 @@
-using Application.Common.Errors;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persistence;
 using Application.Services.Authentication.Commmon;
@@ -19,10 +18,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
         _userRepository = userRepository;
     }
     public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand request, CancellationToken cancellationToken)
-    {
-        await Task.CompletedTask;
-        
-        if (_userRepository.GetUserByEmail(request.Email) is not null)
+    {        
+        if (await _userRepository.GetUserByEmailAsync(request.Email) is not null)
         {
             return Errors.User.DuplicateEmail;
         }
@@ -34,6 +31,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             Email = request.Email,
             Password = request.Password
         };
+        
         _userRepository.AddUser(user);
 
         string token = _jwtTokenGenerator.GenerateToken(user);
