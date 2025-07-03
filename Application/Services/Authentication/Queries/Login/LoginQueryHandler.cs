@@ -21,8 +21,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
 
    public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery request, CancellationToken cancellationToken)
    {
-     
-      var verificationResult = await VerifyCredentialsAsync(request.Email, request.Password);
+      var verificationResult = await VerifyCredentialsAsync(request);
 
       if (verificationResult.IsError) return verificationResult.Errors;
 
@@ -31,14 +30,14 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
       return new AuthenticationResult(verificationResult.Value, token);
    }
 
-   private async Task<ErrorOr<User>> VerifyCredentialsAsync(string email, string password)
+   private async Task<ErrorOr<User>> VerifyCredentialsAsync(LoginQuery request)
    {
-      if (await _userRepository.GetUserByEmailAsync(email) is not User user)
+      if (await _userRepository.GetUserByEmailAsync(request.Email) is not User user)
       {
          return Errors.User.InvalidCredentials;
       }
 
-      if (user.Password != password)
+      if (user.Password != request.Password)
       {
          return Errors.User.InvalidCredentials;
       }
