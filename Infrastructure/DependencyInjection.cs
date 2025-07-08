@@ -20,18 +20,19 @@ public static class DependencyInjection
    {
       services
          .AddAuth(configuration)
-         .AddPersistence();
+         .AddPersistence(configuration);
 
       return services;
    }
 
    private static IServiceCollection AddPersistence(
-      this IServiceCollection services)
+      this IServiceCollection services,
+      ConfigurationManager configuration)
    {
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IMenuRepository, MenuRepository>();
       services.AddDbContext<KhoaDinnerDbContext>(options => 
-         options.UseSqlServer());
+         options.UseSqlServer(configuration.GetConnectionString(DatabaseConnection.ConnectionString)));
       return services;
    }
 
@@ -42,7 +43,6 @@ public static class DependencyInjection
       var jwtSettings = new JwtSettings();
       configuration.Bind(JwtSettings.SectionName, jwtSettings);
 
-      // services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
       services.AddSingleton(Options.Create(jwtSettings));
       services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
