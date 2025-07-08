@@ -1,0 +1,25 @@
+@baseUrl = http://localhost:5162
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNDQzMzM1Ni1lOWY4LTQ1ZWQtODY4My1kOWE0N2I5ODJlMmUiLCJnaXZlbl9uYW1lIjoiYyIsImZhbWlseV9uYW1lIjoiYyIsImp0aSI6Ijk1ODRhNjBhLWE3MWMtNGMzMi1hZjJiLTJjZTZjODJiYTQ1ZiIsImV4cCI6MTc1MTk4MTAzMywiaXNzIjoiSHV5bmhBbmhLaG9hIiwiYXVkIjoiSHV5bmhBbmhLaG9hIn0.DpoW28v--xscmwJXbOMLcsdhIkSk8jwtPspYnyaMOW0
+@hostId = adage
+
+POST {{baseUrl}}/api/{{hostId}}/menu
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+   "name" : "Menu1",
+   "description" : "Lần này thì anh chịu thua em rồi.",
+   "sections" : [
+      {
+         "name" : "Sit rang bơ",
+         "description" : "Lần này thì anh chịu thua em rồi.",
+         "items" : [
+            {
+               "name" : "Bơ đậu xanh",
+               "description" : "Lần này thì anh chịu thua em rồi."
+            }
+         ]
+      }
+   ]
+
+}
