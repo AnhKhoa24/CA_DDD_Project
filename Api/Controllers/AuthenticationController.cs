@@ -1,6 +1,6 @@
 using Application.Authentication.Commands.Register;
 using Application.Authentication.Commmon;
-using Application.Services.Authentication.Queries.Login;
+using Application.Authentication.Queries.Login;
 using Contractas.Authentication;
 using ErrorOr;
 using MapsterMapper;

@@ -33,12 +33,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
 
         var token = _jwtTokenGenerator.GenerateToken(user);
 
-        return new AuthenticationResult(
-            user.Id.Value,
-            user.FirstName,
-            user.LastName,
-            user.Email,
-            token
-        );
+        return ConvertAuthentication.Convert(user, token);
     }
 }

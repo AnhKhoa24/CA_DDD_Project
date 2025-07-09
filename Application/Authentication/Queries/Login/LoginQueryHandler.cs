@@ -7,7 +7,7 @@ using Domain.User;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Services.Authentication.Queries.Login;
+namespace Application.Authentication.Queries.Login;
 
 public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
@@ -28,18 +28,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
 
       var token = _jwtTokenGenerator.GenerateToken(verificationResult.Value);
 
-      return AuthenticationResult(verificationResult.Value, token);
-   }
-
-   private static AuthenticationResult AuthenticationResult(User user, string token)
-   {
-      return new AuthenticationResult(
-         user.Id.Value,
-         user.FirstName,
-         user.LastName,
-         user.Email,
-         token
-      );
+      return ConvertAuthentication.Convert(verificationResult.Value, token);
    }
 
    private async Task<ErrorOr<User>> VerifyCredentialsAsync(LoginQuery request)

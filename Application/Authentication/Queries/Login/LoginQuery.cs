@@ -2,7 +2,7 @@ using Application.Authentication.Commmon;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Services.Authentication.Queries.Login;
+namespace Application.Authentication.Queries.Login;
 
 
 public record LoginQuery
