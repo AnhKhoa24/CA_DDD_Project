@@ -19,3 +19,8 @@ Microsoft.EntityFrameworkCore.SqlServer
     Nếu một service chỉ cần gửi command/query (CQRS), inject ISender.
     Nếu một service chỉ cần publish notification/event (event-driven), inject IPublisher.
 ==> Đảm bảo chữ I trong SOLID
+
+ dotnet ef migrations add TenMigration -p .\Infrastructure\ -s .\Api\
+ 
+ dotnet ef database update -p .\Infrastructure\ -s .\Api\ --connection "Server=localhost,1433;Database=KhoaDinner;User ID=sa;Password=Khoa@2405; Encrypt=false"
+

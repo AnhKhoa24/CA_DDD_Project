@@ -8,14 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
     .AddPresentation()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
-    // builder.Services.AddControllers(options => options.Filters.Add<ErrorHandingFilterAttribute>());
 }
 
 var app = builder.Build();
 {
-    // app.UseMiddleware<ErrorHandingMiddleware>();
     app.UseExceptionHandler("/error");
+    
     app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.MapControllers();
     app.Run();
 }

@@ -1,47 +1,50 @@
 using Api.Common.Http;
 using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api;
 
 [ApiController]
+[Authorize]
 public class ApiController : ControllerBase
 {
-    protected IActionResult Problem(List<Error> errors)
-    {
-        if (errors.All(error => error.Type is ErrorType.Validation))
-        {
-            var modelStateDictionary = new ModelStateDictionary();
+   protected IActionResult Problem(List<Error> errors)
+   {
+      if (errors.Count is 0) return Problem();
 
-            foreach (var error in errors)
-            {
-                modelStateDictionary.AddModelError(error.Code, error.Description);
-            }
+      if (errors.All(error => error.Type is ErrorType.Validation))
+      {
+         return ValidationProblem(errors);
+      }
 
-            return ValidationProblem(modelStateDictionary);
-        }
+      HttpContext.Items[HttpContextItemKeys.Errors] = errors;
 
-        HttpContext.Items[HttpContextItemKeys.Errors] = errors;
+      return Problem(errors[0]);
+   }
 
-        var firstError = errors[0];
-        var statusCode = MapErrorTypeToStatusCode(firstError);
+   private IActionResult ValidationProblem(List<Error> errors)
+   {
+      var modelStateDictionary = new ModelStateDictionary();
 
-        return Problem(
-            statusCode: statusCode,
-            title: firstError.Description);
-    }
+      foreach (var error in errors)
+      {
+         modelStateDictionary.AddModelError(error.Code, error.Description);
+      }
+      return ValidationProblem(modelStateDictionary);
+   }
 
-    private int MapErrorTypeToStatusCode(Error error)
-    {
-        return error.Type switch
-        {
-            ErrorType.Conflict => StatusCodes.Status409Conflict,
-            ErrorType.NotFound => StatusCodes.Status404NotFound,
-            ErrorType.Validation => StatusCodes.Status400BadRequest,
-            ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
-            ErrorType.Forbidden => StatusCodes.Status403Forbidden,
-            _ => StatusCodes.Status500InternalServerError
-        };
-    }
+   private IActionResult Problem(Error error)
+   {
+      return error.Type switch
+      {
+         ErrorType.Conflict => Problem(statusCode: StatusCodes.Status409Conflict, title: error.Description),
+         ErrorType.NotFound => Problem(statusCode: StatusCodes.Status404NotFound, title: error.Description),
+         ErrorType.Validation => Problem(statusCode: StatusCodes.Status400BadRequest, title: error.Description),
+         ErrorType.Unauthorized => Problem(statusCode: StatusCodes.Status401Unauthorized, title: error.Description),
+         ErrorType.Forbidden => Problem(statusCode: StatusCodes.Status403Forbidden, title: error.Description),
+         _ => Problem(),
+      };
+   }
 }

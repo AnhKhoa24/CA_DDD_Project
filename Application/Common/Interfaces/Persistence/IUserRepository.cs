@@ -1,8 +1,9 @@
-using Domain.Entities;
+using Domain.User;
+
 namespace Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    User? GetUserByEmail(string email);
-    void AddUser(User user);
+    Task<User?> GetUserByEmailAsync(string email);
+    Task AddUser(User user);
 }
