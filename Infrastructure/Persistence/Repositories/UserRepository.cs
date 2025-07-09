@@ -1,19 +1,26 @@
 using Application.Common.Interfaces.Persistence;
-using Domain.Entities;
+using Domain.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
 public class UserRepository : IUserRepository
 {
-   private static List<User> _users = new List<User>();
-   public void AddUser(User user)
+   private readonly KhoaDinnerDbContext _context;
+
+   public UserRepository(KhoaDinnerDbContext context)
    {
-      _users.Add(user);
+      _context = context;
+   }
+
+   public async Task AddUser(User user)
+   {
+      await _context.Users.AddAsync(user);
+      await _context.SaveChangesAsync();
    }
 
    public async Task<User?> GetUserByEmailAsync(string email)
    {
-      await Task.CompletedTask;
-      return _users.SingleOrDefault(x => x.Email == email);
+      return await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
    }
 }

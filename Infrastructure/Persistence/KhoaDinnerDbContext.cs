@@ -1,4 +1,5 @@
 using Domain.Menu;
+using Domain.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -12,6 +13,7 @@ public class KhoaDinnerDbContext : DbContext
    }
 
    public DbSet<Menu> Menus { get; set; } = null!;
+   public DbSet<User> Users { get; set; } = null!;
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)
    {

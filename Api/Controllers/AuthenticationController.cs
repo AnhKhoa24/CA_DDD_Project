@@ -1,5 +1,5 @@
-using Application.Services.Authentication.Commands.Register;
-using Application.Services.Authentication.Commmon;
+using Application.Authentication.Commands.Register;
+using Application.Authentication.Commmon;
 using Application.Services.Authentication.Queries.Login;
 using Contractas.Authentication;
 using ErrorOr;

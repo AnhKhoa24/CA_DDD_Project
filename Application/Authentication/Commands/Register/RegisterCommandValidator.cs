@@ -1,3 +1,4 @@
+using Application.Authentication.Commands.Register;
 using FluentValidation;
 
 namespace Application.Services.Authentication.Commands.Register;

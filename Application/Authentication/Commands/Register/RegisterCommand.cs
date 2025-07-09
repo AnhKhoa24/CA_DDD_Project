@@ -1,8 +1,8 @@
-using Application.Services.Authentication.Commmon;
+using Application.Authentication.Commmon;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Services.Authentication.Commands.Register;
+namespace Application.Authentication.Commands.Register;
 
 public record RegisterCommand
 (

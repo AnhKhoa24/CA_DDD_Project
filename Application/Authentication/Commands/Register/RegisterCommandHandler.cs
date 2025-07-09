@@ -1,12 +1,13 @@
+using Application.Authentication.Commmon;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persistence;
-using Application.Services.Authentication.Commmon;
+using Application.Common.Utils;
 using Domain.Common.Errors;
-using Domain.Entities;
+using Domain.User;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Services.Authentication.Commands.Register;
+namespace Application.Authentication.Commands.Register;
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
@@ -24,20 +25,19 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<A
             return Errors.User.DuplicateEmail;
         }
 
-        var user = new User
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Password = request.Password
-        };
-        
-        _userRepository.AddUser(user);
+        var passwordEncrypt = BcryptPasswordHasher.Hash(request.Password);
 
-        string token = _jwtTokenGenerator.GenerateToken(user);
+        var user = User.Create(request.FirstName, request.LastName, request.Email, passwordEncrypt);
+        
+        await _userRepository.AddUser(user);
+
+        var token = _jwtTokenGenerator.GenerateToken(user);
 
         return new AuthenticationResult(
-            user,
+            user.Id.Value,
+            user.FirstName,
+            user.LastName,
+            user.Email,
             token
         );
     }

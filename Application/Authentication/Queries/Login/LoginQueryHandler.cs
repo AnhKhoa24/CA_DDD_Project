@@ -1,8 +1,9 @@
+using Application.Authentication.Commmon;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persistence;
-using Application.Services.Authentication.Commmon;
+using Application.Common.Utils;
 using Domain.Common.Errors;
-using Domain.Entities;
+using Domain.User;
 using ErrorOr;
 using MediatR;
 
@@ -27,7 +28,18 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
 
       var token = _jwtTokenGenerator.GenerateToken(verificationResult.Value);
 
-      return new AuthenticationResult(verificationResult.Value, token);
+      return AuthenticationResult(verificationResult.Value, token);
+   }
+
+   private static AuthenticationResult AuthenticationResult(User user, string token)
+   {
+      return new AuthenticationResult(
+         user.Id.Value,
+         user.FirstName,
+         user.LastName,
+         user.Email,
+         token
+      );
    }
 
    private async Task<ErrorOr<User>> VerifyCredentialsAsync(LoginQuery request)
@@ -37,10 +49,13 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<Authenticat
          return Errors.User.InvalidCredentials;
       }
 
-      if (user.Password != request.Password)
+      var isPasswordCorrect = BcryptPasswordHasher.Verify(request.Password, user.Password);
+
+      if (!isPasswordCorrect)
       {
          return Errors.User.InvalidCredentials;
       }
+
       return user;
    }
 }
