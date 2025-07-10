@@ -5,7 +5,7 @@ using Domain.Menu.ValueObjects;
 namespace Domain.Menu;
 
 
-public sealed class Menu : AggregateRoot<MenuId>
+public sealed class Menu : AggregateRoot<MenuId, Guid>
 {
    private readonly List<MenuSection> _sections = new();
    public string Name { get; private set; }
