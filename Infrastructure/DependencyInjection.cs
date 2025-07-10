@@ -3,6 +3,7 @@ using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Persistence;
 using Infrastructure.Authentication;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,8 @@ public static class DependencyInjection
    {
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IMenuRepository, MenuRepository>();
+      services.AddScoped<PublishDomainEventsInterceptor>();
+
       services.AddDbContext<KhoaDinnerDbContext>(options => 
          options.UseSqlServer(configuration.GetConnectionString(DatabaseConnection.ConnectionString)));
       return services;

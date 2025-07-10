@@ -1,9 +1,13 @@
 namespace Domain.Common.Models;
 
-public abstract class Entity<TId> : IEquatable<Entity<TId>>
-   where TId : notnull
+public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
+   where TId : ValueObject
 {
    public TId Id { get; protected set; }
+
+   private readonly List<IDomainEvent> _domainEvents = new();
+
+   public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
    protected Entity(TId id)
    {
@@ -26,12 +30,21 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
    {
       return Id.GetHashCode();
    }
-   
-   #pragma warning disable CS8618
+
+   public void AddDomainEvent(IDomainEvent domainEvent)
+   {
+      _domainEvents.Add(domainEvent);
+   }
+
+   public void ClearDomainEvents()
+   {
+      _domainEvents.Clear();
+   }
+#pragma warning disable CS8618
    protected Entity()
    {
 
    }
-   #pragma warning disable CS8618
-   
+#pragma warning disable CS8618
+
 }

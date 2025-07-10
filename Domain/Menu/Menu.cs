@@ -1,5 +1,6 @@
 using Domain.Common.Models;
 using Domain.Menu.Entities;
+using Domain.Menu.Events;
 using Domain.Menu.ValueObjects;
 
 namespace Domain.Menu;
@@ -24,12 +25,16 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
 
    public static Menu Create(string name, string description, List<MenuSection>? sections)
    {
-      return new(
+      var menu = new Menu(
          MenuId.CreateUnique(),
          name,
          description,
          sections ?? new()
       );
+
+      menu.AddDomainEvent(new MenuCreated(menu));
+
+      return menu;
    }
 
 #pragma warning disable CS8618
