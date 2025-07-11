@@ -10,7 +10,10 @@ public class CreateMenuCommandValidator : AbstractValidator<CreateMenuCommand>
          .NotEmpty()
          .WithName("Tên món ăn")
          .WithMessage("{PropertyName} không được bỏ trống.");
-      RuleFor(x => x.Description).NotEmpty();
+      RuleFor(x => x.Description)
+         .NotEmpty()
+         .WithMessage("{PropertyName} không được bỏ trống.");
+         
       RuleFor(x => x.Sections).NotEmpty();
    }
 }
