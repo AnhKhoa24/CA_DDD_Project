@@ -1,5 +1,6 @@
+# @baseUrl = https://localhost:7255
 @baseUrl = http://localhost:5162
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMmYyNjAxOS02MGVjLTRkMDItOTQzMy0yNWYyMzY2NzVjY2MiLCJnaXZlbl9uYW1lIjoiS2hvYSIsImZhbWlseV9uYW1lIjoiSHXhu7NuaCIsImp0aSI6ImRkMjlhMGZhLWQ5NWItNDgxNS05YzdhLTk1Y2NlNTQ0OTk5OSIsImV4cCI6MTc1MjE1MTg4NiwiaXNzIjoiSHV5bmhBbmhLaG9hIiwiYXVkIjoiSHV5bmhBbmhLaG9hIn0._K24EESiFWrPrhvxd1ECJiPpFsMgA3NfqKniTCKpNBo
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMmYyNjAxOS02MGVjLTRkMDItOTQzMy0yNWYyMzY2NzVjY2MiLCJnaXZlbl9uYW1lIjoiS2hvYSIsImZhbWlseV9uYW1lIjoiSHXhu7NuaCIsImp0aSI6IjNhZWExODA2LTIzNWQtNDE2YS04NmRjLThkZTI4YWM0NzY1OCIsImV4cCI6MTc1MjIxMDU0MCwiaXNzIjoiSHV5bmhBbmhLaG9hIiwiYXVkIjoiSHV5bmhBbmhLaG9hIn0.W3QlkUiyyx_mOFZgoWZVhaukzhIM_ddI68txY5Xil4U
 @hostId = adage
 
 POST {{baseUrl}}/api/{{hostId}}/menu
@@ -7,7 +8,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-   "name" : "Menu1",
+   "name" : "Menu tE4SST",
    "description" : "Lần này thì anh chịu thua em rồi.",
    "sections" : [
       {
