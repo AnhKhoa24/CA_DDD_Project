@@ -6,14 +6,12 @@ namespace UnitTests.Application.UnitTests.Menus.Commands.TestUtils;
 public static class CreateMenuCommandUtils
 {
    public static CreateMenuCommand CreateCommand(
-      List<MenuSectionCommand>? sections = null,
-      string name = Constants.Menu.Name,
-      string description = Constants.Menu.Description
+      List<MenuSectionCommand>? sections = null
    ) =>
       new CreateMenuCommand
       (
-         name,
-         description,
+         Constants.Menu.Name,
+         Constants.Menu.Description,
          Constants.Menu.HostId,
          sections ?? CreateSectionCommand()
       );

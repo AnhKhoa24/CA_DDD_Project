@@ -1,5 +1,6 @@
 using Application.Common.Interfaces.Persistence;
 using Application.Menus;
+using Application.Menus.Commands.CreateMenu;
 using FluentAssertions;
 using Moq;
 using UnitTests.Application.UnitTests.Menus.Commands.TestUtils;

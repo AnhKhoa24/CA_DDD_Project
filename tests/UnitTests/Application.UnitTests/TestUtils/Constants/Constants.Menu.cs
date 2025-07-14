@@ -12,8 +12,8 @@ public static partial class Constants
       public const string SectionDescription = "Menu Section Description";
       public const string ItemName = "Menu Item Name";
       public const string ItemDescription = "Menu Item Description";
-      public static string SectionNameFromIndex(int index) => $"{SectionName} {index}";
-      public static string SectionDescriptionFromIndex(int index) => $"{SectionDescription} {index}";
+      public static string SectionNameFromIndex(int index = 0) => $"{SectionName} {index}";
+      public static string SectionDescriptionFromIndex(int index = 0) => $"{SectionDescription} {index}";
       public static string ItemNameFromIndex(int index) => $"{ItemName} {index}";
       public static string ItemDescriptionFromIndex(int index) => $"{ItemDescription} {index}";
    }
