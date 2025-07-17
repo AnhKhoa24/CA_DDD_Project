@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controller;
 
 [Route("api/{hostId}/menu")]
+[AllowAnonymous]
 public class MenuController : ApiController
 {
    private readonly IMapper _mapper;
@@ -23,7 +24,6 @@ public class MenuController : ApiController
       _sender = sender;
    }
    [HttpPost]
-   [AllowAnonymous]
    public async Task<IActionResult> CreateMenu(
       CreateMenuRequest request,
       string hostId
@@ -33,20 +33,18 @@ public class MenuController : ApiController
       ErrorOr<Menu> createMenuResult = await _sender.Send(command);
 
       return createMenuResult.Match(
-          createMenuResult => Ok(createMenuResult),
+          createMenuResult => Ok(_mapper.Map<MenuResponse>(createMenuResult)),
           errors => Problem(errors)
       );
    }
    [HttpGet]
-   [AllowAnonymous]
    public async Task<IActionResult> GetMenuPaginate(string hostId, int pageNumber = 1, int pageSize = 10)
    {
       var command = new GetMenuPaginateQuery(pageNumber, pageSize);
       var queryResult = await _sender.Send(command);
-      return Ok(queryResult);
+      return Ok(_mapper.Map<MenuListResponse>(queryResult));
    }
    [HttpPut]
-   [AllowAnonymous]
    public async Task<IActionResult> UpdateMenu(
       UpdateMenuRequest request,
       string hostId
@@ -56,7 +54,7 @@ public class MenuController : ApiController
       ErrorOr<Menu> updateMenuResult = await _sender.Send(command);
 
       return updateMenuResult.Match(
-          createMenuResult => Ok(createMenuResult),
+          updateMenuResult => Ok(_mapper.Map<MenuResponse>(updateMenuResult)),
           errors => Problem(errors)
       );
    }

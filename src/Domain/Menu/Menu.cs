@@ -43,24 +43,23 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
    }
    public void UpdateSections(List<MenuSection> sections)
    {
-      List<MenuSection> uniqueSections = UniqueSection(sections);
+      var uniqueSections = UniqueSection(sections);
 
-      var sectionIds = uniqueSections.ToDictionary(i => i.Id.Value);
-      _sections.RemoveAll(existing => !sectionIds.ContainsKey(existing.Id.Value));
+      RemoveSectionNotIn(uniqueSections);
 
       sections.ForEach(s =>
       {
-         var exists = _sections.FirstOrDefault(f => f.Id.Value == s.Id.Value);
-         if (exists is MenuSection)
-         {
-            exists = s;
-         }
-         else
-         {
-            var newMenuSection = MenuSection.Create(s.Name, s.Description, s.Items.ToList());
-            _sections.Add(newMenuSection);
-         }
+         var index = _sections.FindIndex(f => f.Id.Value == s.Id.Value);
+
+         if (index >= 0) _sections[index] = s;
+         else _sections.Add(MenuSection.Create(s.Name, s.Description, s.Items.ToList()));
       });
+   }
+
+   private void RemoveSectionNotIn(List<MenuSection> uniqueSections)
+   {
+      var sectionIds = uniqueSections.Select(i => i.Id.Value).ToHashSet();
+      _sections.RemoveAll(existing => !sectionIds.Contains(existing.Id.Value));
    }
 
    private List<MenuSection> UniqueSection(List<MenuSection> sections)
@@ -69,6 +68,21 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
          .GroupBy(s => s.Id.Value)
          .Select(g => g.Last())
          .ToList();
+   }
+   public Menu WithName(string name)
+   {
+      Name = name;
+      return this;
+   }
+   public Menu WithDescription(string description)
+   {
+      Description = description;
+      return this;
+   }
+   public Menu WithAverageRating(float averageRating)
+   {
+      AverageRating = averageRating;
+      return this;
    }
 
 #pragma warning disable CS8618

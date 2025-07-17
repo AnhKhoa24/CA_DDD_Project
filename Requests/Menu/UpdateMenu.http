@@ -12,7 +12,7 @@ Content-Type: application/json
    "sections" : [
       {
          "id": "e8198cfe-b3a9-458b-ac24-56b54fcb9b20",
-         "name" : "Test giữ lại",
+         "name" : "Test giữ lại ok khong",
          "description" : "Lần này thì anh chịu thua em rồi.",
          "items" : [
             {
