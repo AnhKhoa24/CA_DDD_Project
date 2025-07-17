@@ -1,0 +1,6 @@
+# @baseUrl = https://localhost:7255
+@baseUrl = http://localhost:5162
+@hostId = adage
+
+GET {{baseUrl}}/api/{{hostId}}/menu?pageNumber=1&pageSize=2
+Content-Type: application/json

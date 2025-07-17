@@ -36,5 +36,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
       builder.Property(x => x.Password)
          .HasMaxLength(255);
+
+      builder.Property(x => x.CreatedAt);
+      builder.Property(x => x.UpdatedAt);
    }
 }

@@ -20,7 +20,7 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
    {
       Name = name;
       Description = description;
-      _sections = sections; 
+      _sections = sections;
    }
 
    public static Menu Create(string name, string description, List<MenuSection>? sections)
@@ -35,6 +35,40 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
       menu.AddDomainEvent(new MenuCreated(menu));
 
       return menu;
+   }
+   public void UpdateMenuSections(List<MenuSection> sections)
+   {
+      _sections.Clear();
+      _sections.AddRange(sections);
+   }
+   public void UpdateSections(List<MenuSection> sections)
+   {
+      List<MenuSection> uniqueSections = UniqueSection(sections);
+
+      var sectionIds = uniqueSections.ToDictionary(i => i.Id.Value);
+      _sections.RemoveAll(existing => !sectionIds.ContainsKey(existing.Id.Value));
+
+      sections.ForEach(s =>
+      {
+         var exists = _sections.FirstOrDefault(f => f.Id.Value == s.Id.Value);
+         if (exists is MenuSection)
+         {
+            exists = s;
+         }
+         else
+         {
+            var newMenuSection = MenuSection.Create(s.Name, s.Description, s.Items.ToList());
+            _sections.Add(newMenuSection);
+         }
+      });
+   }
+
+   private List<MenuSection> UniqueSection(List<MenuSection> sections)
+   {
+      return sections
+         .GroupBy(s => s.Id.Value)
+         .Select(g => g.Last())
+         .ToList();
    }
 
 #pragma warning disable CS8618

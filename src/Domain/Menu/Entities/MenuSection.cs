@@ -21,13 +21,38 @@ public sealed class MenuSection : Entity<MenuSectionId>
 
    public static MenuSection Create(string name, string description, List<MenuItem>? items)
    {
-      return new(
+      return new MenuSection(
          MenuSectionId.CreateUnique(),
          name,
          description,
          items ?? new()
       );
    }
+   public static MenuSection CreateWithId(MenuSectionId menuSectionId,string name, string description, List<MenuItem>? items)
+   {
+      return new MenuSection(
+         menuSectionId,
+         name,
+         description,
+         items ?? new()
+      );
+   }
+   public void UpdateMenuItems(List<MenuItem> items)
+   {
+      _items.Clear();
+      _items.AddRange(items);
+   }
+
+   // public MenuSection UpdateName(string name)
+   // {
+   //    Name = name;
+   //    return this;
+   // }
+   // public MenuSection UpdateDescription(string description)
+   // {
+   //    Description = description;
+   //    return this;
+   // }
 
 #pragma warning disable CS8618
    private MenuSection()

@@ -25,3 +25,6 @@ Microsoft.EntityFrameworkCore.SqlServer
  dotnet ef database update -p .\Infrastructure\ -s .\Api\ --connection "Server=localhost,1433;Database=KhoaDinner;User ID=sa;Password=Khoa@2405; Encrypt=false"
 
 Get-ChildItem -Recurse -Filter *.csproj | ForEach-Object { dotnet sln add $_.FullName }
+
+dotnet ef migrations add UpdateUser -p .\src\Infrastructure\ -s .\src\Api\
+dotnet ef database update -p .\src\Infrastructure\ -s .\src\Api\ --connection "Server=localhost,1433;Database=KhoaDinner;User ID=sa;Password=Khoa@2405; Encrypt=false"

@@ -1,0 +1,44 @@
+# @baseUrl = https://localhost:7255
+@baseUrl = http://localhost:5162
+@hostId = adage
+
+PUT {{baseUrl}}/api/{{hostId}}/menu
+Content-Type: application/json
+
+{
+   "id": "10a9f6bf-e827-4087-9aa0-41972f86580d",
+   "name" : "Menu",
+   "description" : "Lần này thì anh chịu thua em rồi.",
+   "sections" : [
+      {
+         "id": "e8198cfe-b3a9-458b-ac24-56b54fcb9b20",
+         "name" : "Test giữ lại",
+         "description" : "Lần này thì anh chịu thua em rồi.",
+         "items" : [
+            {
+               "id":"",
+               "name" : "Menu item của menu giữ lại",
+               "description" : "Lần này thì anh chịu thua em rồi."
+            }
+         ]
+      },
+      {
+         "id": "",
+         "name" : "Mới 2",
+         "description" : "Lần này thì anh chịu thua em rồi.",
+         "items" : [
+            {
+               "id":"",
+               "name" : "Mới 2 item 1",
+               "description" : "Lần này thì anh chịu thua em rồi."
+            },
+            {
+               "id":"",
+               "name" : "Mới 2 item 2",
+               "description" : "Lần này thì anh chịu thua em rồi."
+            }
+
+         ]
+      }
+   ]
+}
