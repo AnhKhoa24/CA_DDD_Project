@@ -9,14 +9,18 @@ public sealed class User : AggregateRoot<UserId, Guid>
    public string LastName { get; private set; }
    public string Email { get; private set; }
    public string Password { get; private set; }
+   public DateTime CreatedAt { get; private set; }
+   public DateTime UpdatedAt { get; private set; }
 
-   private User(UserId userId, string firstName, string lastName, string email, string password)
+   private User(UserId userId, string firstName, string lastName, string email, string password, DateTime createdAt, DateTime updatedAt)
    : base(userId)
    {
       FirstName = firstName;
       LastName = lastName;
       Email = email;
       Password = password;
+      CreatedAt = createdAt;
+      UpdatedAt = updatedAt;
    }
    public static User Create(string firstName, string lastName, string email, string password)
    {
@@ -24,8 +28,10 @@ public sealed class User : AggregateRoot<UserId, Guid>
          UserId.CreateUnique(),
          firstName,
          lastName,
-      email,
-         password
+         email,
+         password,
+         DateTime.UtcNow,
+         DateTime.UtcNow
       );
    }
 

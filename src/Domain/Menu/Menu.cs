@@ -20,7 +20,7 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
    {
       Name = name;
       Description = description;
-      _sections = sections; 
+      _sections = sections;
    }
 
    public static Menu Create(string name, string description, List<MenuSection>? sections)
@@ -35,6 +35,54 @@ public sealed class Menu : AggregateRoot<MenuId, Guid>
       menu.AddDomainEvent(new MenuCreated(menu));
 
       return menu;
+   }
+   public void UpdateMenuSections(List<MenuSection> sections)
+   {
+      _sections.Clear();
+      _sections.AddRange(sections);
+   }
+   public void UpdateSections(List<MenuSection> sections)
+   {
+      var uniqueSections = UniqueSection(sections);
+
+      RemoveSectionNotIn(uniqueSections);
+
+      sections.ForEach(s =>
+      {
+         var index = _sections.FindIndex(f => f.Id.Value == s.Id.Value);
+
+         if (index >= 0) _sections[index] = s;
+         else _sections.Add(MenuSection.Create(s.Name, s.Description, s.Items.ToList()));
+      });
+   }
+
+   private void RemoveSectionNotIn(List<MenuSection> uniqueSections)
+   {
+      var sectionIds = uniqueSections.Select(i => i.Id.Value).ToHashSet();
+      _sections.RemoveAll(existing => !sectionIds.Contains(existing.Id.Value));
+   }
+
+   private List<MenuSection> UniqueSection(List<MenuSection> sections)
+   {
+      return sections
+         .GroupBy(s => s.Id.Value)
+         .Select(g => g.Last())
+         .ToList();
+   }
+   public Menu WithName(string name)
+   {
+      Name = name;
+      return this;
+   }
+   public Menu WithDescription(string description)
+   {
+      Description = description;
+      return this;
+   }
+   public Menu WithAverageRating(float averageRating)
+   {
+      AverageRating = averageRating;
+      return this;
    }
 
 #pragma warning disable CS8618

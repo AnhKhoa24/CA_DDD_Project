@@ -2,7 +2,7 @@ using ErrorOr;
 
 namespace Domain.Common.Errors;
 
-public static class Errors
+public static partial class Errors
 {
    public static class User
    {

@@ -19,3 +19,9 @@ public record MenuItemResponse(
    string Id, 
    string Name,
    string Description);
+
+public record MenuListResponse(
+   int pageNumber,
+   int pageSize,
+   List<MenuResponse> Menus
+);

@@ -3,16 +3,16 @@ namespace Contracts.Menus;
 public record CreateMenuRequest(
    string Name,
    string Description,
-   List<MenuSection> Sections
+   List<CreateMenuSection> Sections
 );
 
-public record MenuSection(
+public record CreateMenuSection(
    string Name,
    string Description,
-   List<MenuItem> Items
+   List<CreateMenuItem> Items
 );
 
-public record MenuItem(
+public record CreateMenuItem(
    string Name,
    string Description
 );

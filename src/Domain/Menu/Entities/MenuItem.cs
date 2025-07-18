@@ -16,15 +16,23 @@ public sealed class MenuItem : Entity<MenuItemId>
    }
    public static MenuItem Create(string name, string description)
    {
-      return new(
+      return new MenuItem(
          MenuItemId.CreateUnique(),
          name,
          description
       );
    }
 
+   public static MenuItem CreateWithId(MenuItemId menuItemId, string name, string description)
+   => new MenuItem(
+         menuItemId,
+         name,
+         description
+      );
+
 #pragma warning disable CS8618
    private MenuItem() { }
 
 #pragma warning restore CS8618
+
 }
