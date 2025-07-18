@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controller;
 
 [Route("api/{hostId}/menu")]
-[AllowAnonymous]
+[AllowAnonymous] 
 public class MenuController : ApiController
 {
    private readonly IMapper _mapper;
@@ -24,10 +24,7 @@ public class MenuController : ApiController
       _sender = sender;
    }
    [HttpPost]
-   public async Task<IActionResult> CreateMenu(
-      CreateMenuRequest request,
-      string hostId
-   )
+   public async Task<IActionResult> CreateMenu(CreateMenuRequest request,string hostId)
    {
       var command = _mapper.Map<CreateMenuCommand>((request, hostId));
       ErrorOr<Menu> createMenuResult = await _sender.Send(command);
@@ -45,10 +42,7 @@ public class MenuController : ApiController
       return Ok(_mapper.Map<MenuListResponse>(queryResult));
    }
    [HttpPut]
-   public async Task<IActionResult> UpdateMenu(
-      UpdateMenuRequest request,
-      string hostId
-   )
+   public async Task<IActionResult> UpdateMenu(UpdateMenuRequest request,string hostId)
    {
       var command = _mapper.Map<UpdateMenuCommand>((request, hostId));
       ErrorOr<Menu> updateMenuResult = await _sender.Send(command);
