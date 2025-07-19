@@ -12,12 +12,9 @@ namespace Application.Menus;
 public class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, ErrorOr<Menu>>
 {
    private readonly IMenuRepository _menuRepository;
-   private readonly IGenericCacheService _cache;
-
-   public CreateMenuCommandHandler(IMenuRepository menuRepository, IGenericCacheService cache)
+   public CreateMenuCommandHandler(IMenuRepository menuRepository)
    {
       _menuRepository = menuRepository;
-      _cache = cache;
    }
 
    public async Task<ErrorOr<Menu>> Handle(CreateMenuCommand request, CancellationToken cancellationToken)
@@ -35,7 +32,6 @@ public class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, Error
       );
 
       await _menuRepository.AddMenuAsync(menu);
-      await _cache.ClearCacheFromGroupKeyAsync(MenuCacheSettings.GetGroupKey(), cancellationToken);
 
       return menu;
    }

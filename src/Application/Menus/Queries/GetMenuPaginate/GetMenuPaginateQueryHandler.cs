@@ -9,12 +9,12 @@ namespace Application.Menus.Queries.GetMenuPaginate;
 public class GetMenuPaginateQueryHandler : IRequestHandler<GetMenuPaginateQuery, MenuResult>
 {
    private readonly IMenuRepository _menuRepository;
-   private readonly IGenericCacheService _genericCacheService;
+   private readonly IGenericCacheService _cache;
 
-   public GetMenuPaginateQueryHandler(IMenuRepository menuRepository, IGenericCacheService genericCacheService)
+   public GetMenuPaginateQueryHandler(IMenuRepository menuRepository, IGenericCacheService cache)
    {
       _menuRepository = menuRepository;
-      _genericCacheService = genericCacheService;
+      _cache = cache;
    }
 
    public async Task<MenuResult> Handle(GetMenuPaginateQuery request, CancellationToken cancellationToken)
@@ -22,7 +22,7 @@ public class GetMenuPaginateQueryHandler : IRequestHandler<GetMenuPaginateQuery,
       var cacheKey = MenuCacheSettings.GetCacheMenuPaginateKey(request.pageNumber, request.pageSize);
       var groupKey = MenuCacheSettings.GetGroupKey();
 
-      return await _genericCacheService.GetOrAddAsync(
+      return await _cache.GetCacheOr(
           cacheKey,
           groupKey,
           async () =>

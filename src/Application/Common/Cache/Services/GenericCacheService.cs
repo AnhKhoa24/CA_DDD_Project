@@ -12,7 +12,7 @@ public class GenericCacheService : IGenericCacheService
    }
 
    ///pattern Cache-Aside
-   public async Task<T> GetOrAddAsync<T>(string key, string groupKey, Func<Task<T>> factory,
+   public async Task<T> GetCacheOr<T>(string key, string groupKey, Func<Task<T>> factory,
    TimeSpan ttl, CancellationToken cancellationToken)
    {
       var cached = await _cacheProvider.GetAsync<T>(key, cancellationToken);
