@@ -11,14 +11,16 @@ public class GenericCacheService : IGenericCacheService
         _cacheProvider = cacheProvider;
     }
 
-    public async Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory, TimeSpan ttl, CancellationToken cancellationToken)
-    {
-        var cached = await _cacheProvider.GetAsync<T>(key, cancellationToken);
-        if (cached is not null)
-            return cached;
 
-        var data = await factory();
-        await _cacheProvider.SetAsync(key, data, ttl, cancellationToken);
-        return data;
-    }
+   ///pattern Cache-Aside
+   public async Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> factory, TimeSpan ttl, CancellationToken cancellationToken)
+   {
+      var cached = await _cacheProvider.GetAsync<T>(key, cancellationToken);
+      if (cached is not null)
+         return cached;
+
+      var data = await factory();
+      await _cacheProvider.SetAsync(key, data, ttl, cancellationToken);
+      return data;
+   }
 }
