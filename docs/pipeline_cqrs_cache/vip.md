@@ -1,5 +1,6 @@
 # Cấu hình PipeLine Cache với CQRS
 
+<pre>
 📁 Application
 │
 ├── 📁 Menu
@@ -15,6 +16,7 @@
 │   │   └── ICachedQuery.cs                ✅ Interface đánh dấu Query cần cache
 │   ├── Behaviors
 │   │   └── CacheBehavior.cs               ✅ PipelineBehavior tự động cache
+</pre>
 
 
 ## 1. Interface `ICachedQuery
@@ -109,6 +111,5 @@ public class CacheBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TR
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheBehavior<,>));
 
 ```
-
 
 ## ***NOTE: Tất cả các query nào cần dùng logic get/set cache chỉ cần kết thừa interface `ICachedQuery`
