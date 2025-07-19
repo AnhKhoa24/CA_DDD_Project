@@ -1,32 +1,47 @@
-# 🛒 Mini Ecommerce - DDD & Clean Architecture
+# 🛒 AK DDD + CA Template
 
-Chào mừng bạn đến với dự án **Mini Ecommerce**, ứng dụng thử nghiệm mô hình **Domain-Driven Design (DDD)** kết hợp **Clean Architecture**. Mục tiêu là xây dựng kiến trúc rõ ràng, dễ bảo trì, tách bạch các tầng và tuân thủ nguyên tắc SOLID, giúp phát triển, mở rộng và bảo trì dự án lâu dài.
+Ứng dụng thử nghiệm mô hình **Domain-Driven Design (DDD)** kết hợp **Clean Architecture**. Mục tiêu là xây dựng kiến trúc rõ ràng, dễ bảo trì, tách bạch các tầng và tuân thủ nguyên tắc SOLID, giúp phát triển, mở rộng và bảo trì dự án lâu dài.
 
 Dưới đây là **hình minh họa mô hình DDD** mà dự án này áp dụng
-
 
 <p align="center">
   <img src="docs/ddd_layers.png" alt="DDD Layer" width="400"/>
 </p>
 
-
 ---
 
 ## 📂 Cấu trúc thư mục
 
-Mini_Ecommerce_DDD/
+<pre>
+📁 Database
+📁 Requests
+├── 📁 Authentication
+|    └── 🌐 Login.http 
+│   .... // To do...
+📁 src
+├── 📁 Api
+│   ├── 📁 Common
+│   ├── 📁 Controllers
 
-├── Api/                     → Presentation Layer (Controllers, Middleware)
+├── 📁 Application
+├── 📁 Contracts
+├── 📁 Domain
+├── 📁 Infrastructure
 
-├── Application/             → Business Logic (Use Cases, Services, Interfaces)
-
-├── Domain/                  → Core Domain (Entities, Value Objects, Enums)
-
-├── Infrastructure/          → External Dependencies (EF Core, JWT, Email, etc.)
-
-├── Contracts/               → DTOs and external-facing models
-
-└── Requests/                → REST Client Test Files (.http)
+├── 📁 Menu
+│   ├── 📁 Commands
+│   │   └── CreateMenuCommand.cs
+│   │   └── ...
+│   ├── 📁 Queries
+│   │   └── GetMenuPaginateQuery.cs        👈 implements ICachedQuery
+│   │   └── GetMenuPaginateQueryHandler.cs
+│
+├── 📁 Common
+│   ├── Interfaces
+│   │   └── ICachedQuery.cs                ✅ Interface đánh dấu Query cần cache
+│   ├── Behaviors
+│   │   └── CacheBehavior.cs               ✅ PipelineBehavior tự động cache
+</pre>
 
 ---
 
@@ -68,7 +83,7 @@ Mini_Ecommerce_DDD/
 * `Audience`: Đối tượng sử dụng token.
 * **ConnectionStrings.Connection** : Chuỗi kết nối database (SQL Server, PostgreSQL,...).
 
-## 🚀 Chạy dự án
+## Chạy dự án
 
 🔧 Từ thư mục gốc, chạy thẳng:
 
@@ -82,11 +97,41 @@ dotnet run --project ./Api/
 dotnet watch run --project ./Api/
 ```
 
+## Kiểm soát lỗi toàn cục
 
-## ✅ Chạy Unit Tests
+Cấu hình tại:
 
-Tại thư mục gốc:
+```
+📁 src  
+├── 📁 Api  
+│   ├── 📁 Controller  
+│        └── 📝 ErrorsController.cs 
+│   └── ⚙️ Program.cs
+```
 
-```bash
-dotnet run --project ./Api/
+Dùng controller ErrorsController làm middleware khi dự án ném ra 1 ngoại lệ không biết trước
+
+```csharp
+public class ErrorsController : ControllerBase
+{
+    [Route("/error")]
+    public IActionResult Error()
+    {
+        Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+        // return Problem(detail: exception?.Message);   //Development mode only
+        //To do,... ex: save error 
+        return Problem();
+    }
+}
+```
+
+Đăng ký trong Program.cs
+
+```csharp
+var app = builder.Build();
+{
+    app.UseExceptionHandler("/error");
+    ....
+    app.Run();
+}
 ```
