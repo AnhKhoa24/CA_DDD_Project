@@ -1,4 +1,4 @@
-# 🛒 AK DDD + CA Template
+# AK DDD + CA Template
 
 Ứng dụng thử nghiệm mô hình **Domain-Driven Design (DDD)** kết hợp **Clean Architecture**. Mục tiêu là xây dựng kiến trúc rõ ràng, dễ bảo trì, tách bạch các tầng và tuân thủ nguyên tắc SOLID, giúp phát triển, mở rộng và bảo trì dự án lâu dài.
 

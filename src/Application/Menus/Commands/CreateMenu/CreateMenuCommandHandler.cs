@@ -1,4 +1,6 @@
+using Application.Common.Cache.Interfaces;
 using Application.Common.Interfaces.Persistence;
+using Application.Menus.Cache;
 using Domain.Menu;
 using Domain.Menu.Entities;
 using ErrorOr;
@@ -10,10 +12,12 @@ namespace Application.Menus;
 public class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, ErrorOr<Menu>>
 {
    private readonly IMenuRepository _menuRepository;
+   private readonly IGenericCacheService _cache;
 
-   public CreateMenuCommandHandler(IMenuRepository menuRepository)
+   public CreateMenuCommandHandler(IMenuRepository menuRepository, IGenericCacheService cache)
    {
       _menuRepository = menuRepository;
+      _cache = cache;
    }
 
    public async Task<ErrorOr<Menu>> Handle(CreateMenuCommand request, CancellationToken cancellationToken)
@@ -31,6 +35,7 @@ public class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, Error
       );
 
       await _menuRepository.AddMenuAsync(menu);
+      await _cache.ClearCacheFromGroupKeyAsync(MenuCacheSettings.GetGroupKey(), cancellationToken);
 
       return menu;
    }

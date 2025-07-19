@@ -20,9 +20,11 @@ public class GetMenuPaginateQueryHandler : IRequestHandler<GetMenuPaginateQuery,
    public async Task<MenuResult> Handle(GetMenuPaginateQuery request, CancellationToken cancellationToken)
    {
       var cacheKey = MenuCacheSettings.GetCacheMenuPaginateKey(request.pageNumber, request.pageSize);
+      var groupKey = MenuCacheSettings.GetGroupKey();
 
       return await _genericCacheService.GetOrAddAsync(
           cacheKey,
+          groupKey,
           async () =>
           {
              var menus = await _menuRepository.GetMenusPaginateAsync(request.pageNumber, request.pageSize);
