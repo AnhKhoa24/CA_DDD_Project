@@ -1,5 +1,10 @@
 namespace Contracts.Menus;
 
+public record MenuListResponse(
+   int pageNumber,
+   int pageSize,
+   List<MenuResponse> Menus
+);
 public record MenuResponse(
    string Id,
    string Name,
@@ -20,8 +25,3 @@ public record MenuItemResponse(
    string Name,
    string Description);
 
-public record MenuListResponse(
-   int pageNumber,
-   int pageSize,
-   List<MenuResponse> Menus
-);

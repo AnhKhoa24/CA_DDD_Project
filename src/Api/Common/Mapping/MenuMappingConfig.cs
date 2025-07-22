@@ -19,6 +19,11 @@ public class MenuMappingConfig : IRegister
          .Map(dest => dest.HostId, src => src.HostId)
          .Map(dest => dest, src => src.Request);
 
+      config.NewConfig<MenuResult, MenuListResponse>()
+         .Map(dest => dest.pageNumber, src => src.pageNumber)
+         .Map(dest => dest.pageSize, src => src.pageSize)
+         .Map(dest => dest.Menus, src => src.Menus);
+
       config.NewConfig<MenuItem, MenuItemResponse>()
          .Map(dest => dest.Id, src => src.Id.Value.ToString())
          .Map(dest => dest, src => src);
@@ -30,7 +35,5 @@ public class MenuMappingConfig : IRegister
       config.NewConfig<Menu, MenuResponse>()
          .Map(dest => dest.Id, src => src.Id.Value.ToString())
          .Map(dest => dest, src => src);
-
-      config.NewConfig<MenuResult, MenuListResponse>();
    }
 }

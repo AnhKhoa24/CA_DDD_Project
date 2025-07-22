@@ -10,7 +10,6 @@ namespace Application.Menus;
 public class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, ErrorOr<Menu>>
 {
    private readonly IMenuRepository _menuRepository;
-
    public CreateMenuCommandHandler(IMenuRepository menuRepository)
    {
       _menuRepository = menuRepository;
