@@ -1,7 +1,6 @@
 using System.Reflection;
 using Application.Common.Behaviors;
-using Application.Common.Cache.Interfaces;
-using Application.Common.Cache.Core;
+using Application.Common.Caching;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,11 @@ public static class DependencyInjection
 {
    public static IServiceCollection AddApplication(this IServiceCollection services)
    {
-      services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+      services.AddMediatR(config =>
+      {
+         config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+         config.AddOpenBehavior(typeof(QueryCachingPipelineBehavior<,>));
+      });
 
       services.AddScoped(
           typeof(IPipelineBehavior<,>),
@@ -21,7 +24,7 @@ public static class DependencyInjection
 
       services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-      services.AddScoped<IGenericCacheService, GenericCacheService>();
+      services.AddScoped<ICacheHelper, CacheHelper>();
 
       return services;
    }

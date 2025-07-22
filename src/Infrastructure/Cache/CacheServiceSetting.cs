@@ -1,6 +1,6 @@
 namespace Infrastructure.Cache;
 
-public class CacheServiceSetting
+internal class CacheServiceSetting
 {
    public const int DefaultCacheTime = 10;
    public const string SectionName = "CacheSettings";

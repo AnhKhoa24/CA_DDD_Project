@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Application.Common.Cache.Core;
+using Application.Common.Caching;
 
 namespace Authentication;
 
@@ -31,8 +31,8 @@ public static class DependencyInjection
 
    private static IServiceCollection AddCache(this IServiceCollection services, ConfigurationManager configuration)
    {
-      // services.AddMemoryCache();
-      // services.AddScoped<ICacheProvider, MemoryCacheProvider>();
+      services.AddMemoryCache();
+      services.AddScoped<ICacheService, CacheService>();
       
       var cacheSettings = new CacheServiceSetting();
       configuration.Bind(CacheServiceSetting.SectionName, cacheSettings);

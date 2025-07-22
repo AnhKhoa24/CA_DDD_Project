@@ -1,5 +1,6 @@
 using Application.Menus;
 using Application.Menus.Commands.UpdateMenu;
+using Application.Menus.Common;
 using Application.Menus.Queries.GetMenuPaginate;
 using Contracts.Menus;
 using Domain.Menu;
@@ -38,8 +39,11 @@ public class MenuController : ApiController
    public async Task<IActionResult> GetMenuPaginate(string hostId, int pageNumber = 1, int pageSize = 10)
    {
       var command = new GetMenuPaginateQuery(pageNumber, pageSize);
-      var queryResult = await _sender.Send(command);
-      return Ok(_mapper.Map<MenuListResponse>(queryResult));
+      ErrorOr<MenuResult> queryResult = await _sender.Send(command);
+      return queryResult.Match(
+          queryResult => Ok(_mapper.Map<MenuListResponse>(queryResult)),
+          errors => Problem(errors)
+      );
    }
    [HttpPut]
    public async Task<IActionResult> UpdateMenu(UpdateMenuRequest request,string hostId)
