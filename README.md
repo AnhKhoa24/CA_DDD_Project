@@ -135,3 +135,36 @@ var app = builder.Build();
     app.Run();
 }
 ```
+
+## Mapping với Mapster
+
+📁 src
+├── 📁 Api
+│   ├── 📁 Common
+│        └── 📁 Mapping
+│                  └── 📝 MenuMapping.cs
+
+Mapping dữ dễ dàng với Mapster:
+
+```csharp
+public class MenuMappingConfig : IRegister
+{
+   public void Register(TypeAdapterConfig config)
+   {
+      config.NewConfig<(CreateMenuRequest Request, string HostId), CreateMenuCommand>()
+         .Map(dest => dest.HostId, src => src.HostId)
+         .Map(dest => dest, src => src.Request);
+
+      config.NewConfig<(UpdateMenuRequest Request, string HostId), UpdateMenuCommand>()
+         .Map(dest => dest.HostId, src => src.HostId)
+         .Map(dest => dest, src => src.Request);
+      //To do ...........
+   }
+}
+```
+
+Sử dụng dễ dàng:
+
+```cshap
+var command = _mapper.Map<CreateMenuCommand>((request, hostId));
+```
